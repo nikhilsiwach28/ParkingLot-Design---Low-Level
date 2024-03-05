@@ -1,0 +1,124 @@
+Functional Requirements:
+
+Parking Spot Allocation: Automatically assign an available parking spot to a vehicle when it enters, based on the vehicle’s size (e.g., motorcycle, car, bus).
+
+Check-In and Check-Out: Record the entry and exit times of vehicles.
+
+Parking Fee Calculation: Calculate fees based on the duration of stay and vehicle type.
+
+Real-Time Availability Update: Update the availability of parking spots in real-time as vehicles enter and leave.
+
+
+
+Parking Lot:
+    ID
+    Number of Floors
+    Number of Spots per Floor
+    Availability Status (for each spot)
+Vehicle:
+    License Plate
+    Size (motorcycle, car, bus)
+    Entry Time
+    Exit Time
+Parking Transaction:
+    Vehicle ID
+    Parking Spot ID
+    Entry Time
+    Exit Time
+    Fee
+Algorithm for Spot Allocation:
+    When a vehicle enters:
+
+    Iterate through available spots on the current floor based on vehicle size.
+    If a spot is found, assign it to the vehicle.
+    If not, search for available spots on other floors.
+    The algorithm should prioritize closer spots and smaller vehicles for efficient space utilization.
+
+Fee Calculation Logic:
+    Calculate parking duration: Exit Time - Entry Time.
+    Calculate fee based on:
+    Hourly rate for cars and motorcycles.
+    Daily rate for buses.
+    Additional charges for exceeding the allowed time.
+Real-Time Availability Update:
+    Update spot availability in real-time when a vehicle enters or leaves.
+    Use locks or transactions to ensure data consistency in a multi-user environment.
+Interaction Flow:
+Vehicle Entry:
+
+    System receives vehicle details.
+    Algorithm assigns a parking spot.
+    Entry time is recorded.
+Vehicle Exit:
+
+    System receives the exit request.
+    Calculates the parking duration and fee.
+    Updates spot availability.
+    Records exit time and fee in the transaction history.
+Real-Time Updates:
+
+    Availability status is updated as vehicles enter and exit.
+
+API for Vehicle Entry:
+
+    Endpoint: /parking/entry
+    Method: POST
+    Parameters:
+    Vehicle License Plate
+    Vehicle Size
+    Return Type: JSON
+    Description: Assigns an available parking spot to the vehicle based on size and records the entry time.
+API for Vehicle Exit:
+
+    Endpoint: /parking/exit
+    Method: POST
+    Parameters:
+    Vehicle License Plate
+    Return Type: JSON
+    Description: Records the exit time, calculates parking fees, updates spot availability, and returns the total fee.
+API for Real-Time Spot Availability:
+
+    Endpoint: /parking/availability
+    Method: GET
+    Parameters: None
+    Return Type: JSON
+    Description: Retrieves real-time information on available parking spots for different vehicle sizes.
+API for Parking History:
+
+    Endpoint: /parking/history
+    Method: GET
+    Parameters:
+    Vehicle License Plate (optional)
+    Return Type: JSON
+    Description: Retrieves the parking history, including entry and exit times, for a specific vehicle or all vehicles.
+API for Parking Spot Information:
+
+    Endpoint: /parking/spot/{spot_id}
+    Method: GET
+    Parameters:
+    Spot ID
+    Return Type: JSON
+    Description: Retrieves details about a specific parking spot, including its availability status and location.
+API for Fee Calculation Rules:
+
+    Endpoint: /parking/fees/rules
+    Method: GET
+    Parameters: None
+    Return Type: JSON
+    Description: Retrieves the rules and rates for calculating parking fees based on duration and vehicle type.
+
+// Algorithm for spot allocation
+function allocateParkingSpot(vehicle):
+    for floor in floors:
+        for spot in floor.availableSpots:
+            if spot.size == vehicle.size:
+                reserveSpot(vehicle, spot)
+                return spot
+
+    for floor in floors:
+        for spot in floor.availableSpots:
+            if spot.size >= vehicle.size:
+                reserveSpot(vehicle, spot)
+                return spot
+
+    return null
